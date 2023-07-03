@@ -11169,11 +11169,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellent\\CDExcellent.csproj",
+      "projectUniqueName": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellentApp\\CDExcellent\\CDExcellent.csproj",
       "projectName": "CDExcellent",
-      "projectPath": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellent\\CDExcellent.csproj",
+      "projectPath": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellentApp\\CDExcellent\\CDExcellent.csproj",
       "packagesPath": "C:\\Users\\tombo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellent\\obj\\",
+      "outputPath": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellentApp\\CDExcellent\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\tombo\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "V9xNF9H2UnEmyMwKONnhJN4uX4Sbdwts0u6o5NT3a8v7A4b6S98Duc+ORga9yQULvaSNu/Bl1Z0e8sR4I7T35w==",
+  "dgSpecHash": "bagwCBI9jSVhBSi3zj8keozGHZtNdZq3ZkhjxbxKG4lrUZOEbgbphApJYEweR76DvrOEVvkyn/juFkeMX8OjWA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellent\\CDExcellent.csproj",
+  "projectFilePath": "C:\\Users\\tombo\\OneDrive\\Máy tính\\CDExcellentApp\\CDExcellent\\CDExcellent.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tombo\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\tombo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

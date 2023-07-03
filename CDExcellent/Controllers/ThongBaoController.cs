@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
+// thong bao cua nguoi dung
+// tao thong bao
 namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ThonngBaoController : ControllerBase
+    public class ThongBaoController : ControllerBase
     {
         // GET: api/<ThonngBaoController>
         [HttpGet("DanhSachThongBao")]

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
+// Visiting List- Create/Edit/Delete
+//  Visiting- View Detail
+//  (Mapping to
+//  Calendar Mobile
+//  and Email
 namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]

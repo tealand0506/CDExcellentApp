@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CDExcellent.Models
 {
+    [Table("User")]
+
     public class User
     {
         [Key]
@@ -19,7 +21,6 @@ namespace CDExcellent.Models
         public string Email {get;set;}
         [Required]
         public string DiaChi {get;set;}
-        public string AnhDaiDien{get;set;}
 
         public int IdAccount{get;set;}
         [ForeignKey("IAccount")]

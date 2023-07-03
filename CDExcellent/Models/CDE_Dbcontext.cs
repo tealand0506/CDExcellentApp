@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 
 namespace CDExcellent.Models
 {
@@ -12,10 +13,11 @@ namespace CDExcellent.Models
         public DbSet<ChucVu> ChucVus {get;set;}
         public DbSet<KhaoSat> KhaoSats {get;set;}
         public DbSet<KhuVuc> KhuVucs {get;set;}
-        public DbSet<LichSu> LichSus {get;set;}
+        public DbSet<KhuVuc_NPP> KhuVuc_NPPs { get;set;}
+        public DbSet<KhuVuc_User> KhuVuc_Users { get;set;}
         public DbSet<LichTrinh> LichTrinhs {get;set;}
         public DbSet<NhaPhanPhoi> NhaPhanPhois {get;set;}
-        public DbSet<Task> Tasks {get;set;}
+        public DbSet<CongViec> CongViecs {get;set;}
         public DbSet<ThongBao> ThongBaos {get;set;}
         public DbSet<TieuChiKS> TieuChiKSs {get;set;}
     }

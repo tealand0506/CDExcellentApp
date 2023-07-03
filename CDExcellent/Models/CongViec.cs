@@ -2,10 +2,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CDExcellent.Models{
-    public class Task
+    [Table("CongViec")]
+    public class CongViec
     {
         [Key]
-        public int IdTask { get;set;}
+        public int IdCV { get;set;}
         public string TuaDe{get;set;}
         public DateTime fDate {get;set;}
         public DateTime tDate {get;set;}
@@ -14,9 +15,8 @@ namespace CDExcellent.Models{
         [ForeignKey("IdLichTrinh")]
         public LichTrinh LichTrinhs{get;set;}
 
-        
-        public int IdUser {get;set;}
-        [ForeignKey("IdUser")]
-        public User Users {get; set;}
+        // public int? IdUser {get;set;}
+        // [ForeignKey("IdUser")]
+        // public User Users {get; set;}
     }
 }

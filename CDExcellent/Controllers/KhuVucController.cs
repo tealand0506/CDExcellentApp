@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CDExcellent.DTO;
+using CDExcellent.Models;
+using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,91 @@ namespace CDExcellent.Controllers
     [ApiController]
     public class KhuVucController : ControllerBase
     {
+        private readonly CDE_Dbcontext _context;
+        private readonly IKhuVucRepository _KhuVucRepository;
+        public KhuVucController(CDE_Dbcontext context, IKhuVucRepository khuVucRepository)
+        {
+            _context = context;
+            _KhuVucRepository = khuVucRepository;
+        }
         // GET: api/<KhuVucController>
         [HttpGet("DanhSachKhuVuc")]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> DanhSachKhuVuc()
         {
-            return new string[] { "value1", "value2" };
+            var dsKhuVuc = await _KhuVucRepository.GetAllKhuVuc();
+            return Ok(dsKhuVuc);
         }
 
         // GET api/<KhuVucController>/5
         [HttpGet("TimKhuVuc/{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> KhuVucById(int id)
         {
-            return "value";
+            var khuVucById = await _KhuVucRepository.GetByIdKhuVuc(id);
+            return Ok(khuVucById);
         }
 
         // POST api/<KhuVucController>
         [HttpPost("ThemKhuVuc")]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> ThemKhuVuc([FromForm] KhuVucDTO kvMoi)
         {
+            var themKhuVuc = await _KhuVucRepository.PostKhuVuc(kvMoi);
+            return Ok(new 
+            {
+                mess = "THÊM KHU VỤC THÀNH CÔNG!",
+                themKhuVuc,
+            });
         }
 
         // PUT api/<KhuVucController>/5
-        [HttpPut("XoaKhuVuc/{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("CapNhatKhuVuc/{id}")]
+        public async Task<IActionResult> CapNhatKhuVuc(int id, [FromForm] KhuVucDTO kvMoi)
         {
+            var kvCanSua = await _KhuVucRepository.GetByIdKhuVuc(id);
+            if(kvCanSua == null)
+            {
+                return Ok("Không tồn tại khu vực có ID="+id);
+            }
+            await _KhuVucRepository.PutKhuVuc(kvCanSua, kvMoi);
+            return Ok(new{
+                mess = "Cập nhật thành công!",
+                kvCanSua,
+            });
         }
 
         // DELETE api/<KhuVucController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("XoaKhuVuc/{id}")]
+        public async Task<IActionResult> XoaKhuVuc(int id)
         {
+            var kvCanXoa = await _KhuVucRepository.GetByIdKhuVuc(id);
+            if(kvCanXoa == null)
+            {
+                return Ok("Không tồn tại khu vực có ID="+id);
+            }
+            await _KhuVucRepository.DeleteKhuVuc(kvCanXoa);
+            return Ok("Khu vực được xóa thành công!");
         }
+
+        // GET: api/<KhuVucController>
+        [HttpGet("NhaPhanPhoiTrongKhuVuc")]
+        public async Task<IActionResult> NhaPhanPhoiTrongKhuVuc(int IdKhuVuc)
+        {
+            var dsNhaPhanPhoi = await _KhuVucRepository.GetAllPhanPhoiTrongKhuVuc(IdKhuVuc);
+            return Ok(dsNhaPhanPhoi);
+        }
+
+        // POST api/<KhuVucController>
+        [HttpPost("ThemNhaPhanPhoiTrongKhuVuc")]
+        public async Task<IActionResult> ThemNhaPhanPhoiTrongKhuVuc([FromForm] KhuVuc_NPPDTO ppMoi)
+        {
+            var PhanPhoiMoi = await _KhuVucRepository.PostKhuVuc_NhaPhanPhoi(ppMoi);
+            return Ok(new
+            {
+                mess = "THÊM NHÀ PHÂN PHỐI MỚI TRONG KHU VỤC THÀNH CÔNG!",
+                PhanPhoiMoi,
+            });
+        }
+
+
+
     }
 }
