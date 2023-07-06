@@ -4,6 +4,7 @@ using CDExcellent.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CDExcellent.Migrations
 {
     [DbContext(typeof(CDE_Dbcontext))]
-    partial class CDE_DbcontextModelSnapshot : ModelSnapshot
+    [Migration("20230705034548_updateDB")]
+    partial class updateDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,6 +172,29 @@ namespace CDExcellent.Migrations
                     b.ToTable("KhuVuc_NPP");
                 });
 
+            modelBuilder.Entity("CDExcellent.Models.KhuVuc_User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("IdKhuVuc")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdKhuVuc");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("KhuVuc_User");
+                });
+
             modelBuilder.Entity("CDExcellent.Models.LichTrinh", b =>
                 {
                     b.Property<int>("IdLichTrinh")
@@ -309,7 +334,7 @@ namespace CDExcellent.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HoTen")
                         .IsRequired()
@@ -330,13 +355,14 @@ namespace CDExcellent.Migrations
 
                     b.Property<string>("SDT")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Token")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("tgThamGia")
@@ -347,9 +373,6 @@ namespace CDExcellent.Migrations
                     b.HasIndex("IdChucVu");
 
                     b.HasIndex("IdKhuVuc");
-
-                    b.HasIndex("SDT", "Email")
-                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -401,6 +424,25 @@ namespace CDExcellent.Migrations
                     b.Navigation("KhuVucs");
 
                     b.Navigation("NhaPhanPhois");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.KhuVuc_User", b =>
+                {
+                    b.HasOne("CDExcellent.Models.KhuVuc", "KhuVucs")
+                        .WithMany()
+                        .HasForeignKey("IdKhuVuc")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CDExcellent.Models.User", "Users")
+                        .WithMany()
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KhuVucs");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.LichTrinh", b =>

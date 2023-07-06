@@ -16,7 +16,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IChucVuRepository, ChucVuRepository>()
     .AddScoped<IKhuVucRepository, KhuVucRepository>()
-    .AddScoped<INPPRepository, NPPRepository>();
+    .AddScoped<INPPRepository, NPPRepository>()
+    .AddScoped<IUserRepository, UserRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

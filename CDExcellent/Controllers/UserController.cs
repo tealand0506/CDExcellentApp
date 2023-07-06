@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CDExcellent.DTO;
+using CDExcellent.Models;
+using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Mvc;
 
 //  Staff List (BAM,
 //  ASM, CE, SS, NPP)-
@@ -11,36 +14,61 @@ namespace CDExcellent.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly CDE_Dbcontext _context;
+        private readonly IUserRepository _iUserRepository;
+        public UserController(CDE_Dbcontext context, IUserRepository iUserRepository)
+        {
+            _context = context;
+            _iUserRepository= iUserRepository;
+        }
+        
         // GET: api/<UserController>
         [HttpGet("DanhSachNguoiDung")]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> DanhSachNguoiDung()
         {
-            return new string[] { "value1", "value2" };
+            var dsNguoiDung = await _iUserRepository.GetAllUser();
+            return Ok(dsNguoiDung);
         }
 
         // GET api/<UserController>/5
         [HttpGet("TimNguoiDung/{id}")]
-        public string Get(int id)
+        public async Task<User> Get(int id)
         {
-            return "value";
+            return await _iUserRepository.GetByIdUser(id);            
         }
 
         // POST api/<UserController>
-        [HttpPost("ThemtNguoiDung")]
-        public void Post([FromBody] string value)
+        [HttpPost("ThemNguoiDung")]
+        public async Task<IActionResult> ThemNguoDung([FromForm] UserDTO user)
         {
+            await _iUserRepository.PostUser(user);
+            return Ok($"Thông tin của người dùng '{user.HoTen}' đã được thêm thành công! \nKích Hoạt với tên đăng nhập là '{user.Email}' và mật khấu '{user.SDT}' \n\nLưu ý: vui lòng đặt lại thông tin tài khoản sau khi kích hoạt để đảm bảo an toàn thông tin!");
         }
 
         // PUT api/<UserController>/5
         [HttpPut("CapNhatNguoiDung/{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> CapNhatNguoiDung(int id, [FromForm] UserDTO newUser)
         {
+            var oldUser = await _iUserRepository.GetByIdUser(id);
+            if(oldUser == null)
+            {
+                return Ok($"Không tìm thấy người dùng có ID={id}");
+            }
+            await _iUserRepository.PutUser(oldUser,newUser);
+            return Ok("Cập nhật thông tin người dùng thành công!");
         }
 
         // DELETE api/<UserController>/5
         [HttpDelete("XoaNguoiDung/{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> XoaNguoiDung(int id)
         {
+            var oldUser = await _iUserRepository.GetByIdUser(id);
+            if(oldUser == null)
+            {
+                return Ok($"Không tìm thấy người dùng có ID={id}");
+            }
+            await _iUserRepository.DeleteUser(oldUser);
+            return Ok("Xóa người dùng thành công!");
         }
     }
 }

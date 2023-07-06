@@ -75,27 +75,6 @@ namespace CDExcellent.Controllers
             return Ok("Khu vực được xóa thành công!");
         }
 
-        // GET: api/<KhuVucController>
-        [HttpGet("NhaPhanPhoiTrongKhuVuc")]
-        public async Task<IActionResult> NhaPhanPhoiTrongKhuVuc(int IdKhuVuc)
-        {
-            var dsNhaPhanPhoi = await _KhuVucRepository.GetAllPhanPhoiTrongKhuVuc(IdKhuVuc);
-            return Ok(dsNhaPhanPhoi);
-        }
-
-        // POST api/<KhuVucController>
-        [HttpPost("ThemNhaPhanPhoiTrongKhuVuc")]
-        public async Task<IActionResult> ThemNhaPhanPhoiTrongKhuVuc([FromForm] KhuVuc_NPPDTO ppMoi)
-        {
-            var PhanPhoiMoi = await _KhuVucRepository.PostKhuVuc_NhaPhanPhoi(ppMoi);
-            return Ok(new
-            {
-                mess = "THÊM NHÀ PHÂN PHỐI MỚI TRONG KHU VỤC THÀNH CÔNG!",
-                PhanPhoiMoi,
-            });
-        }
-
-
-
+        
     }
 }

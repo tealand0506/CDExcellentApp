@@ -14,19 +14,25 @@ namespace CDExcellent.Models
         [Required]
         public DateTime NgaySinh {get;set;}
         [Required]
-        public DateTime NgayTG {get;set;} = DateTime.Now;
+        public string SDT { get; set;}
         [Required]
-        public string SDT {get;set;}
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
         [Required]
-        public string Email {get;set;}
-        [Required]
-        public string DiaChi {get;set;}
-
-        public int IdAccount{get;set;}
-        [ForeignKey("IAccount")]
-        public Account Accounts { get; set; }
+        public string DiaChi {get;set;} 
+        
         public int IdChucVu {get;set;}
         [ForeignKey("IdChucVu")]
         public ChucVu chucVus {get;set;}
+        public int IdKhuVuc{get;set;}
+        [ForeignKey("IdKhuVuc")]
+        public KhuVuc KhuVucs{get;set;}
+
+
+        public string TenDN {get; set;} 
+        public string Password {get; set;}
+        public DateTime tgThamGia {get;set;}= DateTime.Now;
+        public bool Active {get;set;}    
+        public string? Token{get;set;}
     }
 }
