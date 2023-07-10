@@ -244,6 +244,44 @@ namespace CDExcellent.Migrations
                     b.ToTable("NhaPhanPhoi");
                 });
 
+            modelBuilder.Entity("CDExcellent.Models.TaiKhoan", b =>
+                {
+                    b.Property<int>("IdTaiKhoan")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTaiKhoan"), 1L, 1);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenDN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("tgDangNhap")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("tgDoiMK")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("tgThamGia")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("IdTaiKhoan");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("TaiKhoan");
+                });
+
             modelBuilder.Entity("CDExcellent.Models.ThongBao", b =>
                 {
                     b.Property<int>("IdThongBao")
@@ -300,9 +338,6 @@ namespace CDExcellent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdUser"), 1L, 1);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("DiaChi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -324,23 +359,9 @@ namespace CDExcellent.Migrations
                     b.Property<DateTime>("NgaySinh")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SDT")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TenDN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("tgThamGia")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("IdUser");
 
@@ -412,6 +433,17 @@ namespace CDExcellent.Migrations
                         .IsRequired();
 
                     b.Navigation("NhaPhanPhois");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.TaiKhoan", b =>
+                {
+                    b.HasOne("CDExcellent.Models.User", "Users")
+                        .WithMany()
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.ThongBao", b =>

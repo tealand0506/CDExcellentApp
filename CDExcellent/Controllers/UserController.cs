@@ -16,10 +16,12 @@ namespace CDExcellent.Controllers
     {
         private readonly CDE_Dbcontext _context;
         private readonly IUserRepository _iUserRepository;
-        public UserController(CDE_Dbcontext context, IUserRepository iUserRepository)
+        private readonly ITaiKhoanRepository _iTaiKhoanRepository;
+        public UserController(CDE_Dbcontext context, IUserRepository iUserRepository, ITaiKhoanRepository iTaiKhoanRepository)
         {
             _context = context;
             _iUserRepository= iUserRepository;
+            _iTaiKhoanRepository = iTaiKhoanRepository;
         }
         
         // GET: api/<UserController>
@@ -41,8 +43,13 @@ namespace CDExcellent.Controllers
         [HttpPost("ThemNguoiDung")]
         public async Task<IActionResult> ThemNguoDung([FromForm] UserDTO user)
         {
-            await _iUserRepository.PostUser(user);
-            return Ok($"Thông tin của người dùng '{user.HoTen}' đã được thêm thành công! \nKích Hoạt với tên đăng nhập là '{user.Email}' và mật khấu '{user.SDT}' \n\nLưu ý: vui lòng đặt lại thông tin tài khoản sau khi kích hoạt để đảm bảo an toàn thông tin!");
+            var nd = await _iUserRepository.PostUser(user);
+            var taiKhoan = await _iTaiKhoanRepository.PostTaiKhoan(nd.IdUser);
+            if(taiKhoan == null || nd == null)
+            {
+                return Ok("Không tạo được tài khoản");
+            }
+            return Ok($"Thông tin của người dùng '{nd.HoTen}' đã được thêm thành công! \nKích Hoạt với tên đăng nhập là '{user.Email}' và mật khấu '{user.SDT}' \n\nLưu ý: vui lòng đặt lại thông tin tài khoản sau khi kích hoạt để đảm bảo an toàn thông tin!");
         }
 
         // PUT api/<UserController>/5

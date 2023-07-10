@@ -5,27 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CDExcellent.Migrations
 {
-    public partial class iniDB : Migration
+    public partial class InitBD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Account",
-                columns: table => new
-                {
-                    IdAccount = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    tgThamGia = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Account", x => x.IdAccount);
-                });
-
             migrationBuilder.CreateTable(
                 name: "BaiViet",
                 columns: table => new
@@ -106,28 +89,26 @@ namespace CDExcellent.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HoTen = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NgaySinh = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NgayTG = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SDT = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SDT = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdAccount = table.Column<int>(type: "int", nullable: false),
-                    IAccount = table.Column<int>(type: "int", nullable: false),
-                    IdChucVu = table.Column<int>(type: "int", nullable: false)
+                    IdChucVu = table.Column<int>(type: "int", nullable: false),
+                    IdKhuVuc = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.IdUser);
                     table.ForeignKey(
-                        name: "FK_User_Account_IAccount",
-                        column: x => x.IAccount,
-                        principalTable: "Account",
-                        principalColumn: "IdAccount",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_User_ChucVu_IdChucVu",
                         column: x => x.IdChucVu,
                         principalTable: "ChucVu",
                         principalColumn: "IdChucVu",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_User_KhuVuc_IdKhuVuc",
+                        column: x => x.IdKhuVuc,
+                        principalTable: "KhuVuc",
+                        principalColumn: "IdKhuVuc",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -185,25 +166,24 @@ namespace CDExcellent.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "KhuVuc_User",
+                name: "TaiKhoan",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    IdTaiKhoan = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdKhuVuc = table.Column<int>(type: "int", nullable: false),
-                    IdUser = table.Column<int>(type: "int", nullable: false)
+                    IdUser = table.Column<int>(type: "int", nullable: false),
+                    TenDN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    tgThamGia = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    tgDoiMK = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    tgDangNhap = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KhuVuc_User", x => x.Id);
+                    table.PrimaryKey("PK_TaiKhoan", x => x.IdTaiKhoan);
                     table.ForeignKey(
-                        name: "FK_KhuVuc_User_KhuVuc_IdKhuVuc",
-                        column: x => x.IdKhuVuc,
-                        principalTable: "KhuVuc",
-                        principalColumn: "IdKhuVuc",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_KhuVuc_User_User_IdUser",
+                        name: "FK_TaiKhoan_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
                         principalColumn: "IdUser",
@@ -309,19 +289,14 @@ namespace CDExcellent.Migrations
                 column: "IdNPP");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KhuVuc_User_IdKhuVuc",
-                table: "KhuVuc_User",
-                column: "IdKhuVuc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_KhuVuc_User_IdUser",
-                table: "KhuVuc_User",
-                column: "IdUser");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_LichTrinh_IdNPP",
                 table: "LichTrinh",
                 column: "IdNPP");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaiKhoan_IdUser",
+                table: "TaiKhoan",
+                column: "IdUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ThongBaos_IdUser",
@@ -329,14 +304,20 @@ namespace CDExcellent.Migrations
                 column: "IdUser");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_IAccount",
-                table: "User",
-                column: "IAccount");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_User_IdChucVu",
                 table: "User",
                 column: "IdChucVu");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_IdKhuVuc",
+                table: "User",
+                column: "IdKhuVuc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_SDT_Email",
+                table: "User",
+                columns: new[] { "SDT", "Email" },
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -354,7 +335,7 @@ namespace CDExcellent.Migrations
                 name: "KhuVuc_NPP");
 
             migrationBuilder.DropTable(
-                name: "KhuVuc_User");
+                name: "TaiKhoan");
 
             migrationBuilder.DropTable(
                 name: "ThongBaos");
@@ -366,19 +347,16 @@ namespace CDExcellent.Migrations
                 name: "TieuChiKS");
 
             migrationBuilder.DropTable(
-                name: "KhuVuc");
-
-            migrationBuilder.DropTable(
                 name: "User");
 
             migrationBuilder.DropTable(
                 name: "NhaPhanPhoi");
 
             migrationBuilder.DropTable(
-                name: "Account");
+                name: "ChucVu");
 
             migrationBuilder.DropTable(
-                name: "ChucVu");
+                name: "KhuVuc");
         }
     }
 }

@@ -15,6 +15,7 @@ namespace CDExcellent.Models
         public DbSet<KhuVuc_NPP> KhuVuc_NPPs { get;set;}
         //public DbSet<KhuVuc_User> KhuVuc_Users { get;set;}
         public DbSet<LichTrinh> LichTrinhs {get;set;}
+        public DbSet<TaiKhoan> TaiKhoans {get;set;}
         public DbSet<NhaPhanPhoi> NhaPhanPhois {get;set;}
         public DbSet<CongViec> CongViecs {get;set;}
         public DbSet<ThongBao> ThongBaos {get;set;}

@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\CDExcellent",
+    "\\CDExcellent\\Controllers",
     "\\CDExcellent\\Repositories"
   ],
-  "SelectedNode": "\\CDExcellent\\Program.cs",
+  "SelectedNode": "\\CDExcellentApp.sln",
   "PreviewInSolutionExplorer": false
 }

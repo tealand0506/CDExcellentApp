@@ -28,11 +28,5 @@ namespace CDExcellent.Models
         [ForeignKey("IdKhuVuc")]
         public KhuVuc KhuVucs{get;set;}
 
-
-        public string TenDN {get; set;} 
-        public string Password {get; set;}
-        public DateTime tgThamGia {get;set;}= DateTime.Now;
-        public bool Active {get;set;}    
-        public string? Token{get;set;}
     }
 }

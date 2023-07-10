@@ -17,7 +17,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IChucVuRepository, ChucVuRepository>()
     .AddScoped<IKhuVucRepository, KhuVucRepository>()
     .AddScoped<INPPRepository, NPPRepository>()
-    .AddScoped<IUserRepository, UserRepository>();
+    .AddScoped<IUserRepository, UserRepository>()
+    .AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 
 var app = builder.Build();
 

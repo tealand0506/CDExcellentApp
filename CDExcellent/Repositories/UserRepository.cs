@@ -22,11 +22,6 @@ namespace CDExcellent.Repositories
                 DiaChi=u.DiaChi,
                 IdChucVu = u.IdChucVu,
                 IdKhuVuc = u.IdKhuVuc,
-
-                TenDN = u.Email,
-                Password = u.SDT,
-                tgThamGia = DateTime.Now,
-                Active = true,
             };
             await PostAsync(user);
             return user;
@@ -36,7 +31,7 @@ namespace CDExcellent.Repositories
             return await GetAllAsync();
         }
 
-        public async Task<User> GetByIdUser(int id)
+        public async Task<User?> GetByIdUser(int id)
         {
             return await GetByIdAsync(id);
         }
