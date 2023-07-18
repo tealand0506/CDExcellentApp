@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CDExcellent.Models;
+using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,72 @@ namespace CDExcellent.Controllers
     [ApiController]
     public class TieuChiController : ControllerBase
     {
-        // GET: api/<TieuChiController>
-        [HttpGet("DanhSachTieuChi")]
-        public IEnumerable<string> Get()
+        private readonly CDE_Dbcontext _context;
+        private readonly IKhaoSatRepository _khaoSatRepository;
+        public TieuChiController(CDE_Dbcontext context, IKhaoSatRepository khaoSatRepository)
         {
-            return new string[] { "value1", "value2" };
+            _context = context;
+            _khaoSatRepository = khaoSatRepository;
+        }
+        // GET: api/<KhuVucController>
+        [HttpGet("DanhSachTieuChiKhaoSat")]
+        public async Task<IActionResult> DanhSachTCKS()
+        {
+            var dsTCKS = await _khaoSatRepository.GetAllTCKS();
+            return Ok(dsTCKS);
         }
 
-        // GET api/<TieuChiController>/5
-        [HttpGet("TimTieuChi/{id}")]
-        public string Get(int id)
+        // GET api/<KhuVucController>/5
+        [HttpGet("TimTieuChiKhaoSat/{id}")]
+        public async Task<IActionResult> TCKSById(int id)
         {
-            return "value";
+            var tcks = await _khaoSatRepository.GetByIdTCKS(id);
+            if(tcks == null)
+            {
+                return Ok("Không tồn tại tiêu chí khảo sát có ID="+id);
+            }
+            return Ok(tcks);
         }
 
-        // POST api/<TieuChiController>
-        [HttpPost("ThemTieuChi")]
-        public void Post([FromBody] string value)
+        // POST api/<KhuVucController>
+        [HttpPost("ThemTieuChiKhaoSat")]
+        public async Task<IActionResult> ThemTCKS([FromForm] string NoiDung)
         {
+            var themTCKS = await _khaoSatRepository.PostTCKS(NoiDung);
+            return Ok(new 
+            {
+                mess = "THÊM MỚI TIÊU CHÍ KHẢO SÁT THÀNH CÔNG!",
+                themTCKS,
+            });
         }
 
-        // PUT api/<TieuChiController>/5
-        [HttpPut("CapNhatTieuChi/{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/<KhuVucController>/5
+        [HttpPut("CapNhatTieuChiKhaoSat/{id}")]
+        public async Task<IActionResult> CapNhatTieuChiKhaoSat(int id, [FromForm] string NoiDung)
         {
+            var tcksCanSua = await _khaoSatRepository.GetByIdTCKS(id);
+            if(tcksCanSua == null)
+            {
+                return Ok("Không tồn tại tiêu chí khảo sát có ID="+id);
+            }
+            await _khaoSatRepository.PutTCKS(tcksCanSua, NoiDung);
+            return Ok(new{
+                mess = "Cập nhật thành công!",
+                tcksCanSua,
+            });
         }
 
-        // DELETE api/<TieuChiController>/5
-        [HttpDelete("XoaTieuChi/{id}")]
-        public void Delete(int id)
+        // DELETE api/<KhuVucController>/5
+        [HttpDelete("XoaTieuChiKhaoSat/{id}")]
+        public async Task<IActionResult> XoaTieuChiKhaoSat(int id)
         {
+            var tcksCanXoa = await _khaoSatRepository.GetByIdTCKS(id);
+            if(tcksCanXoa == null)
+            {
+                return Ok("Không tồn tại tiêu chí khảo sát có ID="+id);
+            }
+            await _khaoSatRepository.DeleteTCKS(tcksCanXoa);
+            return Ok($"Tiêu chí khảo sát {tcksCanXoa.NoiDung} được xóa thành công!");
         }
     }
 }

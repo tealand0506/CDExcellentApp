@@ -5,8 +5,8 @@ namespace CDExcellent.Repositories.interfaceRepositories
 {
     public interface ITaiKhoanRepository : IRepository<TaiKhoan>
     {
-        Task<bool> DangNhap(string email, string pass);
-        Task<TaiKhoan> PostTaiKhoan(int idUser);
+        Task<object> DangNhap(string email, string pass);
+        Task<TaiKhoan> PostTaiKhoan(string idUser);
         Task<List<TaiKhoan>> GetAllTaiKhoan();
 
     }

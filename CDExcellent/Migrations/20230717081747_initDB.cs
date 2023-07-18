@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CDExcellent.Migrations
 {
-    public partial class InitBD : Migration
+    public partial class initDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -85,8 +85,7 @@ namespace CDExcellent.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    IdUser = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NgaySinh = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SDT = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -171,7 +170,7 @@ namespace CDExcellent.Migrations
                 {
                     IdTaiKhoan = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdUser = table.Column<int>(type: "int", nullable: false),
+                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TenDN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     tgThamGia = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -199,7 +198,7 @@ namespace CDExcellent.Migrations
                     TuaDe = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NoiDung = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChonAnh = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdUser = table.Column<int>(type: "int", nullable: false)
+                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {

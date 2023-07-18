@@ -496,3 +496,14 @@ C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\obj\Debug\net6.0\r
 C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\obj\Debug\net6.0\CDExcellent.pdb
 C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\obj\Debug\net6.0\CDExcellent.genruntimeconfig.cache
 C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\obj\Debug\net6.0\ref\CDExcellent.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Scrutor.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
+C:\Users\tombo\OneDrive\Máy tính\CDExcellentApp\CDExcellent\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll

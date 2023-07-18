@@ -13,7 +13,8 @@ namespace CDExcellent.Models
         public DbSet<KhaoSat> KhaoSats {get;set;}
         public DbSet<KhuVuc> KhuVucs {get;set;}
         public DbSet<KhuVuc_NPP> KhuVuc_NPPs { get;set;}
-        //public DbSet<KhuVuc_User> KhuVuc_Users { get;set;}
+        public DbSet<Token> Tokens { get;set;}
+        public DbSet<RefreshToken> RefreshTokens { get;set; }
         public DbSet<LichTrinh> LichTrinhs {get;set;}
         public DbSet<TaiKhoan> TaiKhoans {get;set;}
         public DbSet<NhaPhanPhoi> NhaPhanPhois {get;set;}

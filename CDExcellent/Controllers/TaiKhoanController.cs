@@ -37,12 +37,8 @@ namespace CDExcellent.Controllers
         [HttpPost("DangNhap")]
         public async Task<IActionResult> DangNhap([FromForm] string Email, [FromForm] string Password)
         {
-            bool check = await _iTaiKhoanRepository.DangNhap(Email,Generate.GetMD5Hash(Password));
-            if(check)
-            {
-                return Ok("ĐĂNG NHẬP THÀNH CÔNG!");
-            }
-            return Ok("Email hoặc mật khẩu không chính xác!");
+           var kq= await _iTaiKhoanRepository.DangNhap(Email, Password);
+            return Ok(kq);
         }
 
         // PUT api/<TaiKhoanController>/5

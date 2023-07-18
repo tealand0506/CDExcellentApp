@@ -10,7 +10,7 @@ namespace CDExcellent.Models
         [Key]
         public int IdTaiKhoan {get; set;}
 
-        public int IdUser {get;set;}
+        public string IdUser {get;set;}
         [ForeignKey("IdUser")]
         public User Users { get;set;}
         
@@ -22,7 +22,7 @@ namespace CDExcellent.Models
         public DateTime tgThamGia {get;set;}
         public DateTime? tgDoiMK {get;set;}
         public DateTime? tgDangNhap {get;set;}
-
+        //public string Role { get; set; }
         [Required]
         public bool Active {get;set;} = true;
     }

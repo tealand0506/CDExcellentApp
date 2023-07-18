@@ -244,6 +244,34 @@ namespace CDExcellent.Migrations
                     b.ToTable("NhaPhanPhoi");
                 });
 
+            modelBuilder.Entity("CDExcellent.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("JwtId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("CDExcellent.Models.TaiKhoan", b =>
                 {
                     b.Property<int>("IdTaiKhoan")
@@ -255,8 +283,9 @@ namespace CDExcellent.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<int>("IdUser")
-                        .HasColumnType("int");
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -294,8 +323,9 @@ namespace CDExcellent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdUser")
-                        .HasColumnType("int");
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NoiDung")
                         .IsRequired()
@@ -330,13 +360,31 @@ namespace CDExcellent.Migrations
                     b.ToTable("TieuChiKS");
                 });
 
-            modelBuilder.Entity("CDExcellent.Models.User", b =>
+            modelBuilder.Entity("CDExcellent.Models.Token", b =>
                 {
-                    b.Property<int>("IdUser")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdUser"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tokens");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.User", b =>
+                {
+                    b.Property<string>("IdUser")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DiaChi")
                         .IsRequired()
@@ -433,6 +481,17 @@ namespace CDExcellent.Migrations
                         .IsRequired();
 
                     b.Navigation("NhaPhanPhois");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.RefreshToken", b =>
+                {
+                    b.HasOne("CDExcellent.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.TaiKhoan", b =>

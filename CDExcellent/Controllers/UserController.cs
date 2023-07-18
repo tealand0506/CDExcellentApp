@@ -34,7 +34,7 @@ namespace CDExcellent.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("TimNguoiDung/{id}")]
-        public async Task<User> Get(int id)
+        public async Task<User?> Get(int id)
         {
             return await _iUserRepository.GetByIdUser(id);            
         }

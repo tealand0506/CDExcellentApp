@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CDExcellent.Migrations
 {
     [DbContext(typeof(CDE_Dbcontext))]
-    [Migration("20230710083954_InitBD")]
-    partial class InitBD
+    [Migration("20230717081747_initDB")]
+    partial class initDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -257,8 +257,9 @@ namespace CDExcellent.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<int>("IdUser")
-                        .HasColumnType("int");
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -296,8 +297,9 @@ namespace CDExcellent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdUser")
-                        .HasColumnType("int");
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NoiDung")
                         .IsRequired()
@@ -334,11 +336,8 @@ namespace CDExcellent.Migrations
 
             modelBuilder.Entity("CDExcellent.Models.User", b =>
                 {
-                    b.Property<int>("IdUser")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdUser"), 1L, 1);
+                    b.Property<string>("IdUser")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DiaChi")
                         .IsRequired()

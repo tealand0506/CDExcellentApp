@@ -13,8 +13,11 @@ namespace CDExcellent.Repositories
         }
         public async Task<User> PostUser (UserDTO u)
         {
+            string id = DateTime.Now.ToString("ddMMyyHHmmssfffffff");
+
             var user= new User
             {
+                IdUser = id,
                 HoTen = u.HoTen,
                 NgaySinh = u.NgaySinh,
                 SDT = u.SDT,

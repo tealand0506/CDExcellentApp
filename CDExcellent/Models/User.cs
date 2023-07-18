@@ -8,7 +8,7 @@ namespace CDExcellent.Models
     public class User
     {
         [Key]
-        public int IdUser {get; set;}
+        public string IdUser {get; set;}
         [Required]
         public string HoTen {get; set;}
         [Required]

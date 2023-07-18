@@ -10,7 +10,7 @@ namespace CDExcellent.Models
         public string NoiDung {get;set;}
         public string ChonAnh {get;set;}
 
-        public int IdUser { get;set;}
+        public string IdUser { get;set;}
         [ForeignKey("IdUser")]
         public User Users {get; set;}
 
