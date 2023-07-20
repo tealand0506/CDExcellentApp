@@ -43,12 +43,11 @@ namespace CDExcellent.Repositories.interfaceRepositories
         //Phan phoi khu vuc
         public async Task<List<NhaPhanPhoi>> GetAllPhanPhoiTrongKhuVuc(int IdKhuVuc)
         {
-            var kvnpps = await _context.KhuVuc_NPPs.Where(kvnpp => kvnpp.IdKhuVuc == IdKhuVuc).ToListAsync();
-
-           
-            var npps = await _context.NhaPhanPhois.Where(npp => kvnpps.Select(kvnpp => kvnpp.IdNPP).Contains(npp.IdNPP)).ToListAsync();
-            return npps;
-
+            var query = from kvNpp in _context.KhuVuc_NPPs
+                        where kvNpp.IdKhuVuc == IdKhuVuc
+                        select kvNpp.NhaPhanPhois;
+            List<NhaPhanPhoi> nhaPhanPhois = await query.ToListAsync();
+            return nhaPhanPhois;
         }
         public async Task<KhuVuc_NPP> PostKhuVuc_NhaPhanPhoi(KhuVuc_NPPDTO ppMoi)
         {
@@ -61,12 +60,10 @@ namespace CDExcellent.Repositories.interfaceRepositories
             await _context.SaveChangesAsync();
             return PhanPhoiKhuVuc;
         }
-        public async Task<KhuVuc_NPP> PutKhuVuc_NhaPhanPhoi(KhuVuc_NPP pp, KhuVuc_NPPDTO ppMoi)
+        public async Task<KhuVuc_NPP> PutKhuVuc_NhaPhanPhoi(KhuVuc_NPP pp, int IdNPP)
         {
-           // var kv_pp = await _context.KhuVuc_NPPs.Where(p => p.IdNPP == IdNPP && p.IdKhuVuc == IdKhuVuc).FirstOrDefaultAsync();
-
-            pp.IdKhuVuc = ppMoi.IdKhuVuc;
-            pp.IdNPP = ppMoi.IdNPP;
+            
+            pp.IdNPP = IdNPP;
 
             _context.KhuVuc_NPPs.Update(pp);
             await _context.SaveChangesAsync();
@@ -78,5 +75,11 @@ namespace CDExcellent.Repositories.interfaceRepositories
             await _context.SaveChangesAsync();
         }
 
+
+
+        // Task<List<NhaPhanPhoi>> GetAllUserKhuVuc(int IdKhuVuc);
+        // Task<KhuVuc_NPP> PostKhuVuc_User(KhuVuc_NPPDTO ppMoi);
+        // Task<KhuVuc_NPP> PutKhuVuc_User( KhuVuc_NPP pp, KhuVuc_NPPDTO ppMoi);
+        // Task DeleteKhuVuc_User(KhuVuc_NPP CanXoa);
     }
 }

@@ -7,7 +7,7 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy ="Admin")]
+    [Authorize(Policy = "Admin")]
     public class BaiVietController : ControllerBase
     {
         // GET: api/<BaiVietController>

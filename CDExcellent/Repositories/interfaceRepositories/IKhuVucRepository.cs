@@ -13,8 +13,13 @@ namespace CDExcellent.Repositories.interfaceRepositories
 
         Task<List<NhaPhanPhoi>> GetAllPhanPhoiTrongKhuVuc(int IdKhuVuc);
         Task<KhuVuc_NPP> PostKhuVuc_NhaPhanPhoi(KhuVuc_NPPDTO ppMoi);
-        Task<KhuVuc_NPP> PutKhuVuc_NhaPhanPhoi( KhuVuc_NPP pp, KhuVuc_NPPDTO ppMoi);
+        Task<KhuVuc_NPP> PutKhuVuc_NhaPhanPhoi(KhuVuc_NPP pp, int IdNPP);
         Task DeleteKhuVuc_NhaPhanPhoi(KhuVuc_NPP CanXoa);
+
+        // Task<List<NhaPhanPhoi>> GetAllUserKhuVuc(int IdKhuVuc);
+        // Task<KhuVuc_NPP> PostKhuVuc_User(KhuVuc_NPPDTO ppMoi);
+        // Task<KhuVuc_NPP> PutKhuVuc_User( KhuVuc_NPP pp, KhuVuc_NPPDTO ppMoi);
+        // Task DeleteKhuVuc_User(KhuVuc_NPP CanXoa);
 
     }
 }
