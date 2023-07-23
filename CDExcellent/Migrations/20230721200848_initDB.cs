@@ -82,6 +82,20 @@ namespace CDExcellent.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccessToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -144,14 +158,13 @@ namespace CDExcellent.Migrations
                     IdLichTrinh = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TuaDe = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GioDB = table.Column<TimeSpan>(type: "time", nullable: false),
-                    GioKQ = table.Column<TimeSpan>(type: "time", nullable: false),
-                    fNgay = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    tNgay = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdNPP = table.Column<int>(type: "int", nullable: false),
+                    BatDau = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    KetThuc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MucDich = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     KhachMoi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    IdNPP = table.Column<int>(type: "int", nullable: false),
+                    IdNguoiTao = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdNguoiNhan = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,6 +174,37 @@ namespace CDExcellent.Migrations
                         column: x => x.IdNPP,
                         principalTable: "NhaPhanPhoi",
                         principalColumn: "IdNPP",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LichTrinh_User_IdNguoiNhan",
+                        column: x => x.IdNguoiNhan,
+                        principalTable: "User",
+                        principalColumn: "IdUser");
+                    table.ForeignKey(
+                        name: "FK_LichTrinh_User_IdNguoiTao",
+                        column: x => x.IdNguoiTao,
+                        principalTable: "User",
+                        principalColumn: "IdUser");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    JwtId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expires = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "IdUser",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -197,18 +241,24 @@ namespace CDExcellent.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TuaDe = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NoiDung = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ChonAnh = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DaXem = table.Column<bool>(type: "bit", nullable: false),
+                    IdNguoiGui = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdNguoiNhan = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ThongBaos", x => x.IdThongBao);
                     table.ForeignKey(
-                        name: "FK_ThongBaos_User_IdUser",
-                        column: x => x.IdUser,
+                        name: "FK_ThongBaos_User_IdNguoiGui",
+                        column: x => x.IdNguoiGui,
                         principalTable: "User",
-                        principalColumn: "IdUser",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdUser");
+                    table.ForeignKey(
+                        name: "FK_ThongBaos_User_IdNguoiNhan",
+                        column: x => x.IdNguoiNhan,
+                        principalTable: "User",
+                        principalColumn: "IdUser");
                 });
 
             migrationBuilder.CreateTable(
@@ -218,9 +268,14 @@ namespace CDExcellent.Migrations
                     IdCV = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TuaDe = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    fDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    tDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdLichTrinh = table.Column<int>(type: "int", nullable: false)
+                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BatDau = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    KetThuc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HoanThanh = table.Column<bool>(type: "bit", nullable: false),
+                    IdLichTrinh = table.Column<int>(type: "int", nullable: false),
+                    IdNguoiTao = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdNguoiNhan = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -231,6 +286,16 @@ namespace CDExcellent.Migrations
                         principalTable: "LichTrinh",
                         principalColumn: "IdLichTrinh",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CongViec_User_IdNguoiNhan",
+                        column: x => x.IdNguoiNhan,
+                        principalTable: "User",
+                        principalColumn: "IdUser");
+                    table.ForeignKey(
+                        name: "FK_CongViec_User_IdNguoiTao",
+                        column: x => x.IdNguoiTao,
+                        principalTable: "User",
+                        principalColumn: "IdUser");
                 });
 
             migrationBuilder.CreateTable(
@@ -268,6 +333,16 @@ namespace CDExcellent.Migrations
                 column: "IdLichTrinh");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CongViec_IdNguoiNhan",
+                table: "CongViec",
+                column: "IdNguoiNhan");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CongViec_IdNguoiTao",
+                table: "CongViec",
+                column: "IdNguoiTao");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_KhaoSat_IdLichTrinh",
                 table: "KhaoSat",
                 column: "IdLichTrinh");
@@ -288,9 +363,24 @@ namespace CDExcellent.Migrations
                 column: "IdNPP");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LichTrinh_IdNguoiNhan",
+                table: "LichTrinh",
+                column: "IdNguoiNhan");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LichTrinh_IdNguoiTao",
+                table: "LichTrinh",
+                column: "IdNguoiTao");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LichTrinh_IdNPP",
                 table: "LichTrinh",
                 column: "IdNPP");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaiKhoan_IdUser",
@@ -298,9 +388,14 @@ namespace CDExcellent.Migrations
                 column: "IdUser");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ThongBaos_IdUser",
+                name: "IX_ThongBaos_IdNguoiGui",
                 table: "ThongBaos",
-                column: "IdUser");
+                column: "IdNguoiGui");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ThongBaos_IdNguoiNhan",
+                table: "ThongBaos",
+                column: "IdNguoiNhan");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_IdChucVu",
@@ -334,10 +429,16 @@ namespace CDExcellent.Migrations
                 name: "KhuVuc_NPP");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "TaiKhoan");
 
             migrationBuilder.DropTable(
                 name: "ThongBaos");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "LichTrinh");
@@ -346,10 +447,10 @@ namespace CDExcellent.Migrations
                 name: "TieuChiKS");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "NhaPhanPhoi");
 
             migrationBuilder.DropTable(
-                name: "NhaPhanPhoi");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "ChucVu");

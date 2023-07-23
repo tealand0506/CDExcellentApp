@@ -8,11 +8,17 @@ namespace CDExcellent.Models
         public int IdThongBao {get;set;}
         public string TuaDe {get;set;}
         public string NoiDung {get;set;}
-        public string ChonAnh {get;set;}
+        public DateTime NgayTao{get;set;}
+        public bool DaXem {get;set;}
 
-        public string IdUser { get;set;}
-        [ForeignKey("IdUser")]
-        public User Users {get; set;}
+
+        public string? IdNguoiGui { get;set;}
+        [ForeignKey("IdNguoiGui")]
+        public User? NguoiGui {get; set;}
+
+        public string? IdNguoiNhan { get;set;}
+        [ForeignKey("IdNguoiNhan")]
+        public User? NguoiNhan {get; set;}
 
 
     }

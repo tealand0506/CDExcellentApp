@@ -82,6 +82,8 @@ builder.Services.AddScoped<IChucVuRepository, ChucVuRepository>()
     .AddScoped<INPPRepository, NPPRepository>()
     .AddScoped<IUserRepository, UserRepository>()
     .AddScoped<IKhaoSatRepository, KhaoSatRepository>()
+    .AddScoped<ICongViecRepository, CongViecRepository>()
+    .AddScoped<ILichTrinhRepository, LichTrinhRepository>()
     .AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 
 var app = builder.Build();

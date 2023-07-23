@@ -9,23 +9,20 @@ namespace CDExcellent.Models
         [Key]
         public int IdLichTrinh { get;set;}
         public string TuaDe {get;set;}
+        public DateTime NgayTao {get;set;}
+        public DateTime BatDau {get;set;}
+        public DateTime KetThuc {get;set;}
 
-        public TimeSpan GioDB {get;set;}
-        public TimeSpan GioKQ {get;set;}
-        public DateTime fNgay {get;set;}
-        public DateTime tNgay {get;set;}
-
+        public string MucDich {get;set;}
+        public string KhachMoi {get;set;}
+        
         public int IdNPP {get;set;}        
         [ForeignKey("IdNPP")]
         public NhaPhanPhoi NhaPhanPhois {get;set;}
 
-//        public int IdUser {get;set;}
-//        [ForeignKey("IdUser")]
-//        public User Users {get;set;}
-//        
-        public string MucDich {get;set;}
-        public string KhachMoi {get;set;}    
-        public bool Status {get; set;}
+        public string IdNguoiTao {get;set;}
+        [ForeignKey("IdNguoiTao")]
+        public User Users {get;set;}     
     }
 
 }

@@ -28,5 +28,8 @@ namespace CDExcellent.Models
         [ForeignKey("IdKhuVuc")]
         public KhuVuc KhuVucs{get;set;}
 
+
+        // public ICollection<LichTrinh> Users { get; set; }
+        // public ICollection<LichTrinh> NguoiNhan { get; set; }
     }
 }

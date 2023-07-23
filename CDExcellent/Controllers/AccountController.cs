@@ -1,4 +1,5 @@
-﻿using CDExcellent.Middlewares;
+using System.Security.Claims;
+using CDExcellent.Middlewares;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,11 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaiKhoanController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly CDE_Dbcontext _context;
         private readonly ITaiKhoanRepository _iTaiKhoanRepository;
-        public TaiKhoanController(CDE_Dbcontext context, ITaiKhoanRepository iTaiKhoanRepository)
+        public AccountController(CDE_Dbcontext context, ITaiKhoanRepository iTaiKhoanRepository)
         {
             _iTaiKhoanRepository = iTaiKhoanRepository;
             _context = context;
@@ -40,7 +41,24 @@ namespace CDExcellent.Controllers
            var kq= await _iTaiKhoanRepository.DangNhap(Email, Password);
             return Ok(kq);
         }
-
+        [HttpDelete("Dan")]
+        public async Task<IActionResult> DangXuat()
+        {
+            try
+            {
+                var IdUser = User.FindFirstValue("id");
+                if(IdUser == null)
+                {
+                    return BadRequest("Bạn chưa đăng nhập hoặc xác thực!");
+                }
+                await _iTaiKhoanRepository.DangXuat(IdUser);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message});
+            }
+        }
         // PUT api/<TaiKhoanController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

@@ -25,7 +25,6 @@ namespace CDExcellent.Repositories
             return await GetAllAsync();
         }
 
-        // Task<User?> GetByIdTaiKhoan(int id);
         public async Task<TaiKhoan> PostTaiKhoan(string idUser)
         {
             var user = _context.Users.FirstOrDefault(u => u.IdUser == idUser);
@@ -98,8 +97,6 @@ namespace CDExcellent.Repositories
             return themToken;
             
         }
-
-
         public async Task<object> DangNhap(string email, string pass)
         {
             var TK =  _context.TaiKhoans.FirstOrDefault(tk => tk.TenDN == email);
@@ -122,32 +119,130 @@ namespace CDExcellent.Repositories
             }
             else
             {
+                TK.tgDangNhap = DateTime.Now;
+                await PutAsync(TK);
                 var token = GenerateToken(user);
                 return token;
             }
+        }
+            public async Task DangXuat(string IdUser)
+        {
+            var storedToken = _context.RefreshTokens.Where(r => r.UserId == IdUser).ToList();
 
+            if (storedToken == null)
+                throw new Exception("Not found");
 
-            /*
-//            LoginRes res = new LoginRes();
-            string token = CreatedToken(TK);
-                       if (isPasswordNeedChange(userDb.PasswordLifeTime))
-                       {
-                           res.isPasswordNeedChanged = true;
-                       }
-                       else
-                       {
-                           res.isPasswordNeedChanged = false;
-                       }
-           
-       // res.token = token;
-       //create and set the token
-            var refreshToken = RefreshTokenGenerator();
-        SetRefreshToken(refreshToken, userDb);
-        await _dbContext.SaveChangesAsync();
-            return Ok(res);
-            */
+            foreach (var token in storedToken) {
+                _context.Remove(token);
+                await _context.SaveChangesAsync();
+            }
         }
 
+        private string GenerateConfirmMailToken(User user)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("SecretKey").Value));
+
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha512Signature);
+
+            string JwtId = DateTime.Now.ToString("ddMMyyhhmmssfffffff");
+
+            var tokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                new Claim(ClaimTypes.Name, user.HoTen),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, JwtId)
+            }),
+                Expires = DateTime.Now.AddMinutes(2),
+                SigningCredentials = signinCredentials
+            };
+
+            var token = jwtTokenHandler.CreateToken(tokenDescription);
+            var accessToken = jwtTokenHandler.WriteToken(token);
+
+            return accessToken;
+        }
+
+        public async Task<dynamic> ForgotPassword(string emailUser, string url)
+        {
+            var user = await _context.Users.Where(u => u.Email == emailUser)
+                .SingleOrDefaultAsync();
+
+            if (user == null)
+            {
+                return new { Message = "Email không chính xác!" };
+
+            }
+
+            string token = GenerateConfirmMailToken(user);
+
+            return token;
+        }
+    
+        public async Task<object> ResetPassword(DoiMatKhau resetPassword)
+        {
+                var user = await _context.Users.Where(u => u.Email == resetPassword.Email).SingleOrDefaultAsync();
+
+                if (user == null)
+                {
+                    return new{Message = "Email không chính xác!"};                    
+                }
+                var taiKhoan = await _context.TaiKhoans.Where(u => u.IdUser == user.IdUser).SingleOrDefaultAsync();
+
+                if (!CheckTokenConfirmMail(resetPassword.Token))
+                {
+                    return new{Message = "Không tìm thấy xác thực!"};
+                }
+
+                if (resetPassword.NewPassword != resetPassword.ConfirmNewPassword) {
+                    return new{Message = "Xác nhận mật khẩu không khớp"};
+                }
+
+                taiKhoan.Password = Generate.GetMD5Hash(resetPassword.ConfirmNewPassword);
+
+                await PutAsync(taiKhoan);
+                return new{Mess="Đặt lại mật khẩu thành công!"};
+        }
+        private bool CheckTokenConfirmMail(string token)
+        {
+            if (token is null) throw new Exception("Invalid client request");
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("SecretKey").Value)),
+
+                ClockSkew = TimeSpan.Zero,
+
+                ValidateLifetime = false
+            };
+
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenInVerification = jwtTokenHandler.ValidateToken(token,
+                tokenValidationParameters, out var validateToken);
+            if (!(validateToken is JwtSecurityToken jwtSecurityToken)) throw new Exception("access token invalid format");
+
+            var result = jwtSecurityToken.Header.Alg.Equals
+                    (SecurityAlgorithms.HmacSha512,
+                    StringComparison.InvariantCultureIgnoreCase);
+
+            if (!result) throw new SecurityTokenException("Invalid token");
+
+            var expireDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+
+            var now = DateTimeOffset.Now.ToUnixTimeSeconds();
+
+            if (expireDate <= now) throw new Exception("Token has expired");
+
+            return true;
+        }
 
         // Task<User> PutTaiKhoan(User oldUser, UserDTO newsUser);
         // Task DeleteTaiKhoan(User user);

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CDExcellent.Migrations
 {
     [DbContext(typeof(CDE_Dbcontext))]
-    [Migration("20230717081747_initDB")]
+    [Migration("20230721200848_initDB")]
     partial class initDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,22 +80,42 @@ namespace CDExcellent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCV"), 1L, 1);
 
+                    b.Property<DateTime>("BatDau")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HoanThanh")
+                        .HasColumnType("bit");
+
                     b.Property<int>("IdLichTrinh")
                         .HasColumnType("int");
+
+                    b.Property<string>("IdNguoiNhan")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("IdNguoiTao")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("KetThuc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MoTa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TuaDe")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("fDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("tDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("IdCV");
 
                     b.HasIndex("IdLichTrinh");
+
+                    b.HasIndex("IdNguoiNhan");
+
+                    b.HasIndex("IdNguoiTao");
 
                     b.ToTable("CongViec");
                 });
@@ -180,14 +200,20 @@ namespace CDExcellent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdLichTrinh"), 1L, 1);
 
-                    b.Property<TimeSpan>("GioDB")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("GioKQ")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("BatDau")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdNPP")
                         .HasColumnType("int");
+
+                    b.Property<string>("IdNguoiNhan")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("IdNguoiTao")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("KetThuc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("KhachMoi")
                         .IsRequired()
@@ -197,22 +223,17 @@ namespace CDExcellent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
                     b.Property<string>("TuaDe")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("fNgay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("tNgay")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("IdLichTrinh");
 
                     b.HasIndex("IdNPP");
+
+                    b.HasIndex("IdNguoiNhan");
+
+                    b.HasIndex("IdNguoiTao");
 
                     b.ToTable("LichTrinh");
                 });
@@ -244,6 +265,34 @@ namespace CDExcellent.Migrations
                     b.HasKey("IdNPP");
 
                     b.ToTable("NhaPhanPhoi");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("JwtId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.TaiKhoan", b =>
@@ -293,13 +342,17 @@ namespace CDExcellent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdThongBao"), 1L, 1);
 
-                    b.Property<string>("ChonAnh")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("DaXem")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("IdUser")
-                        .IsRequired()
+                    b.Property<string>("IdNguoiGui")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("IdNguoiNhan")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NoiDung")
                         .IsRequired()
@@ -311,7 +364,9 @@ namespace CDExcellent.Migrations
 
                     b.HasKey("IdThongBao");
 
-                    b.HasIndex("IdUser");
+                    b.HasIndex("IdNguoiGui");
+
+                    b.HasIndex("IdNguoiNhan");
 
                     b.ToTable("ThongBaos");
                 });
@@ -332,6 +387,27 @@ namespace CDExcellent.Migrations
                     b.HasKey("IdTieuChi");
 
                     b.ToTable("TieuChiKS");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.User", b =>
@@ -384,7 +460,19 @@ namespace CDExcellent.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CDExcellent.Models.User", "NguoiNhans")
+                        .WithMany()
+                        .HasForeignKey("IdNguoiNhan");
+
+                    b.HasOne("CDExcellent.Models.User", "NguoiTaos")
+                        .WithMany()
+                        .HasForeignKey("IdNguoiTao");
+
                     b.Navigation("LichTrinhs");
+
+                    b.Navigation("NguoiNhans");
+
+                    b.Navigation("NguoiTaos");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.KhaoSat", b =>
@@ -433,7 +521,30 @@ namespace CDExcellent.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CDExcellent.Models.User", "NguoiNhan")
+                        .WithMany()
+                        .HasForeignKey("IdNguoiNhan");
+
+                    b.HasOne("CDExcellent.Models.User", "Users")
+                        .WithMany()
+                        .HasForeignKey("IdNguoiTao");
+
+                    b.Navigation("NguoiNhan");
+
                     b.Navigation("NhaPhanPhois");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.RefreshToken", b =>
+                {
+                    b.HasOne("CDExcellent.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.TaiKhoan", b =>
@@ -449,13 +560,17 @@ namespace CDExcellent.Migrations
 
             modelBuilder.Entity("CDExcellent.Models.ThongBao", b =>
                 {
-                    b.HasOne("CDExcellent.Models.User", "Users")
+                    b.HasOne("CDExcellent.Models.User", "NguoiGui")
                         .WithMany()
-                        .HasForeignKey("IdUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdNguoiGui");
 
-                    b.Navigation("Users");
+                    b.HasOne("CDExcellent.Models.User", "NguoiNhan")
+                        .WithMany()
+                        .HasForeignKey("IdNguoiNhan");
+
+                    b.Navigation("NguoiGui");
+
+                    b.Navigation("NguoiNhan");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.User", b =>
