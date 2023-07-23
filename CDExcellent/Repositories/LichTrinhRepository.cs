@@ -16,7 +16,7 @@ namespace CDExcellent.Repositories
             return await GetAllAsync();
         }
 
-        public async Task<LichTrinh?> LichTrinhAsync(int id)
+        public async Task<LichTrinh?> GetByIdLichTrinhAsync(int id)
         {
             return await GetByIdAsync(id);
         }

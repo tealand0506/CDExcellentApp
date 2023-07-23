@@ -34,9 +34,9 @@ namespace CDExcellent.Repositories
             return await GetAllAsync();
         }
 
-        public async Task<User?> GetByIdUser(int id)
+        public async Task<User?> GetByIdUser(string id)
         {
-            return await GetByIdAsync(id);
+            return  _context.Users.FirstOrDefault(u => u.IdUser == id);             
         }
         public async Task<User> PutUser(User oldUser, UserDTO newUser)
         {

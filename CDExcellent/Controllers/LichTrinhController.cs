@@ -24,16 +24,26 @@ namespace CDExcellent.Controllers
         }
         // GET: api/<LichTrinhController>
         [HttpGet("DanhSachLichTrinh")]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> DnahSachLichTrinh()
         {
-            return new string[] { "value1", "value2" };
+            var dsLichTrinh =  await _iLichTrinhRepository.GetAllLichTrinhAsync();
+            if(dsLichTrinh == null)
+            {
+                return NotFound("Chưa có lịch trình nào được tạo!");
+            }
+            return Ok(dsLichTrinh);
         }
 
         // GET api/<LichTrinhController>/5
         [HttpGet("TimLichTrinh{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return "value";
+            var lichTrinh =  await _iLichTrinhRepository.GetByIdLichTrinhAsync(id);
+            if(lichTrinh == null)
+            {
+                return NotFound("Không tìm thấy lịch trình có ID="+id);
+            }
+            return Ok(lichTrinh);
         }
 
         // POST api/<LichTrinhController>
@@ -53,18 +63,44 @@ namespace CDExcellent.Controllers
             }
         }
 
-        // PUT api/<LichTrinhController>/5
-        [HttpGet("CapNhatLichTrtinh/{id}")]
-        public string iduser()
+        [HttpPut("CapNhatLichTrinh/{id}")]
+        public async Task<IActionResult> CapNhat(int id, [FromForm] LichTrinhDTO ltMoi)
         {
-            string IdUser = User.FindFirstValue("id");
-            return IdUser;
+            try
+            {
+                var ltCanSua = await _iLichTrinhRepository.GetByIdAsync(id);
+                if(ltCanSua == null)
+                {
+                    return NotFound("Không tìm thấy lịch trình có ID="+id);
+                }
+                await _iLichTrinhRepository.PutLichTrinhAsync(ltCanSua, ltMoi);
+                return Ok("Xóa lịch trình thành công!");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest( new {Mess = "Error: " + ex.Message});
+            }
         }
 
         // DELETE api/<LichTrinhController>/5
         [HttpDelete("XoaLichTrinh/{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                var LichTrinhCanXoa = await _iLichTrinhRepository.GetByIdAsync(id);
+                if(LichTrinhCanXoa == null)
+                {
+                    return NotFound("Không tìm thấy lịch trình có ID="+id);
+                }
+                await _iLichTrinhRepository.DeleteLichTrinhAsync(LichTrinhCanXoa);
+                return Ok("Xóa lịch trình thành công!");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest( new {Mess = "Error: " + ex.Message});
+            }
         }
+    
     }
 }

@@ -125,7 +125,7 @@ namespace CDExcellent.Repositories
                 return token;
             }
         }
-            public async Task DangXuat(string IdUser)
+        public async Task DangXuat(string IdUser)
         {
             var storedToken = _context.RefreshTokens.Where(r => r.UserId == IdUser).ToList();
 
@@ -138,6 +138,53 @@ namespace CDExcellent.Repositories
             }
         }
 
+        public async Task<Token> RefreshTokenAsync(Token token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("SecretKey").Value)),
+
+                ClockSkew = TimeSpan.Zero,
+
+                ValidateLifetime = false
+            };
+
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenInVerification = jwtTokenHandler.ValidateToken(token.AccessToken,
+                tokenValidationParameters, out var validateToken);
+            if (!(validateToken is JwtSecurityToken jwtSecurityToken)) throw new Exception("Mã xác thực không hợp lệ!");
+
+            var result = jwtSecurityToken.Header.Alg.Equals
+                    (SecurityAlgorithms.HmacSha512,
+                    StringComparison.InvariantCultureIgnoreCase);
+
+            if (!result) throw new SecurityTokenException("Mã xác thực không hợp lệ!");
+
+            var jwtId = tokenInVerification.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+            var storedToken = _context.RefreshTokens.SingleOrDefault(r => r.JwtId == jwtId);
+
+            if (storedToken is null || storedToken.RefToken != token.RefreshToken)
+                throw new Exception("Yêu cầu không hợp lệ!");
+            if (storedToken.Expires <= DateTime.Now)
+            {
+                _context.Remove(storedToken);
+                await _context.SaveChangesAsync();
+                throw new Exception("Làm mới mã xác thực thành công! Vui lòng đăng nhập lại!");
+            }
+
+            var user = _context.Users.Include(u => u.IdChucVu).SingleOrDefault(u => u.IdUser == storedToken.UserId);
+            var newToken = GenerateToken(user);
+            _context.Remove(storedToken);
+            await _context.SaveChangesAsync();
+
+            return newToken;
+        }
         private string GenerateConfirmMailToken(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -166,17 +213,15 @@ namespace CDExcellent.Repositories
             return accessToken;
         }
 
-        public async Task<dynamic> ForgotPassword(string emailUser, string url)
+        public async Task<dynamic> ForgotPassword(string email)
         {
-            var user = await _context.Users.Where(u => u.Email == emailUser)
-                .SingleOrDefaultAsync();
+            var user = await _context.Users.Where(u => u.Email == email).SingleOrDefaultAsync();
 
             if (user == null)
             {
                 return new { Message = "Email không chính xác!" };
 
             }
-
             string token = GenerateConfirmMailToken(user);
 
             return token;

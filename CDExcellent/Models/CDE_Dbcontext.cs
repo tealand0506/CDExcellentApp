@@ -21,6 +21,7 @@ namespace CDExcellent.Models
         public DbSet<CongViec> CongViecs {get;set;}
         public DbSet<ThongBao> ThongBaos {get;set;}
         public DbSet<TieuChiKS> TieuChiKSs {get;set;}
+        public DbSet<Feedback> Feedbacks {get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

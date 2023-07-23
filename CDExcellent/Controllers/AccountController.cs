@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using CDExcellent.DTO;
 using CDExcellent.Middlewares;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
@@ -27,12 +28,7 @@ namespace CDExcellent.Controllers
             return Ok(dsTaiKhoan);
         }
 
-        // GET api/<TaiKhoanController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+
 
         // POST api/<TaiKhoanController>
         [HttpPost("DangNhap")]
@@ -41,7 +37,7 @@ namespace CDExcellent.Controllers
            var kq= await _iTaiKhoanRepository.DangNhap(Email, Password);
             return Ok(kq);
         }
-        [HttpDelete("Dan")]
+        [HttpDelete("DangXuat")]
         public async Task<IActionResult> DangXuat()
         {
             try
@@ -59,16 +55,86 @@ namespace CDExcellent.Controllers
                 return BadRequest(new { Error = ex.Message});
             }
         }
-        // PUT api/<TaiKhoanController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(Token token)
         {
+            try
+            {
+                var newToken = await _iTaiKhoanRepository.RefreshTokenAsync(token);
+                return Ok(new { JWT = newToken});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
         }
 
-        // DELETE api/<TaiKhoanController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // PUT: User/ChangePassword
+        [HttpPut("DatLaiMatKhau")]        
+        public async Task<IActionResult> DatLaiMatKhau(DoiMatKhau mk)
         {
+            try
+            {
+                await _iTaiKhoanRepository.ResetPassword(mk);
+
+                return Ok(new { Message = "Successful" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
+
+        [HttpGet("QuenMatKhau")]
+        public async Task<IActionResult> ForgotPassword(string emailUser)
+        {
+            try
+            {
+                var result = await _iTaiKhoanRepository.ForgotPassword(emailUser);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        // public async Task<IActionResult> ImportUserFromFileExcel(IFormFile file)
+        // {
+        //     try
+        //     {
+        //         var list = new List<FileExcelUser>();
+        //         using (var Stream = new MemoryStream())
+        //         {
+        //             await file.CopyToAsync(Stream);
+        //             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        //             using (var package = new ExcelPackage(Stream))
+        //             {
+        //                 ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+        //                 var rowcount = worksheet.Dimension.Rows;
+        //                 for (int row = 2; row <= rowcount; row++)
+        //                 {
+        //                     list.Add(new FileExcelUser()
+        //                     {
+        //                         FullName = worksheet.Cells[row, 1].Value.ToString().Trim(),
+        //                         Email = worksheet.Cells[row, 2].Value.ToString().Trim(),
+        //                         Role = worksheet.Cells[row, 3].Value.ToString().Trim(),
+        //                         ReportTo = worksheet.Cells[row, 4].Value.ToString().Trim(),
+        //                     });
+        //                 }
+        //             }
+        //         }
+        //         await _userRepository.ImportUserFromFileExcelAsync(list);
+        //         return Ok(new { Message = "success" });
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return BadRequest(new { Error = $"cannot continue to add this user and the rest of the users because this user is incorrect: {ex.Message}" });
+        //     }
+        // }
+
     }
 }

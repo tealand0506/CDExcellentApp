@@ -12,6 +12,39 @@ namespace CDExcellent.Repositories
         {
             _context = context;
         }
+        public async Task<List<CongViec>> GetAllCongViec()
+        {
+            return await GetAll(cv => cv.LichTrinhs, cv => cv.NguoiTaos);
+        }
+        public async Task<CongViec?> GetByIdCongViec(int id)
+        {
+            return await GetByIdAsync(id);
+        }
+
+        public async Task<object> NhanXetCongViec(string IdUser, FeedbackDTO nx)
+        {
+            var themNhanXet = new Feedback
+            {
+                IdCongViec = nx.IdCongViec,
+                IdNguoiGui = IdUser,
+                NgayGui = DateTime.Now,    
+                NoiDung = nx.NoiDung,            
+            };
+            await _context.Feedbacks.AddRangeAsync(themNhanXet);
+            await _context.SaveChangesAsync();
+            return themNhanXet;
+        }
+
+        public async Task<List<Feedback>> GetAllNhanXet(int congViec)
+        {
+            return await _context.Feedbacks.Where(f=>f.IdCongViec == congViec).ToListAsync();
+        }
+        public async Task<List<CongViec?>> CongViecByUser(string IdUser)
+        {
+            return await _context.CongViecs.Where(c => c.IdNguoiNhan == IdUser) 
+                                            .Include(cv => cv.NguoiTaos)
+                                            .Include(cv => cv.LichTrinhs).ToListAsync();
+        }
         public async Task<CongViec> PostCongViecAsync(CongViecDTO cv, string NguoiTao)
         {
             var NguoiNhan = await _context.Users
@@ -27,6 +60,7 @@ namespace CDExcellent.Repositories
                 BatDau = cv.BatDau,
                 KetThuc = cv.KetThuc, 
                 HoanThanh = false,
+                IdLichTrinh = cv.IdLichTrinh,
                 IdNguoiTao = NguoiTao,
                 IdNguoiNhan = NguoiNhan.Id,
             };
@@ -43,7 +77,24 @@ namespace CDExcellent.Repositories
                 IdNguoiNhan = NguoiNhan.Id
             };        
             await _context.ThongBaos.AddRangeAsync(ThemThongBao);
+            await _context.SaveChangesAsync();
             return ThemCV;
         }
+        public async Task<CongViec> PutCongViecAsync(CongViec cv, CongViecDTO cvMoi)
+        {
+            cv.TuaDe = cvMoi.TuaDe;
+            cv.MoTa = cvMoi.MoTa;
+            cv.NgayTao = DateTime.Now;
+            cv.BatDau = cvMoi.BatDau;
+            cv.KetThuc = cvMoi.KetThuc;
+            await PutAsync(cv);
+            return cv;
+        }
+        public async Task DeleteCongViec(CongViec cv)
+        {
+            await DeleteAsync(cv);
+        }
+
+
     }
 }

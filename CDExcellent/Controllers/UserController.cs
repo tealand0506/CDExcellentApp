@@ -1,4 +1,5 @@
-﻿using CDExcellent.DTO;
+﻿using System.Security.Claims;
+using CDExcellent.DTO;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
 using Microsoft.AspNetCore.Mvc;
@@ -34,11 +35,22 @@ namespace CDExcellent.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("TimNguoiDung/{id}")]
-        public async Task<User?> Get(int id)
+        public async Task<IActionResult> Get(string id)
         {
-            return await _iUserRepository.GetByIdUser(id);            
+            return Ok(await _iUserRepository.GetByIdUser(id));            
         }
 
+        [HttpGet("ThongTinCuaToi")]
+        public async Task<IActionResult> ThongTinCuaToi()
+        {
+            string IdUser = User.FindFirstValue("id");
+            if(IdUser == null)
+            {
+                return NotFound("Vui lòng đăng nhập và xác thực!");
+            }
+            return Ok(await _iUserRepository.GetByIdUser(IdUser));            
+        }
+        
         // POST api/<UserController>
         [HttpPost("ThemNguoiDung")]
         public async Task<IActionResult> ThemNguoDung([FromForm] UserDTO user)
@@ -54,7 +66,7 @@ namespace CDExcellent.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("CapNhatNguoiDung/{id}")]
-        public async Task<IActionResult> CapNhatNguoiDung(int id, [FromForm] UserDTO newUser)
+        public async Task<IActionResult> CapNhatNguoiDung(string id, [FromForm] UserDTO newUser)
         {
             var oldUser = await _iUserRepository.GetByIdUser(id);
             if(oldUser == null)
@@ -67,7 +79,7 @@ namespace CDExcellent.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("XoaNguoiDung/{id}")]
-        public async Task<IActionResult> XoaNguoiDung(int id)
+        public async Task<IActionResult> XoaNguoiDung(string id)
         {
             var oldUser = await _iUserRepository.GetByIdUser(id);
             if(oldUser == null)

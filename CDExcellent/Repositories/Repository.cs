@@ -24,7 +24,15 @@ namespace CDExcellent.Repositories
 
         }
 
-
+        public async Task<List<TEntity>> GetAll(params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
+        }
         public async Task PostAsync(TEntity entity)//them
         {
             await _dbSet.AddAsync(entity);
