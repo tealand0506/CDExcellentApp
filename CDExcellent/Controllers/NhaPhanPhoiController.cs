@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CDExcellent.DTO;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,8 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Manager")]
+
     public class NhaPhanPhoiController : ControllerBase
     {
         private readonly CDE_Dbcontext _context;

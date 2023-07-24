@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CDExcellent.DTO;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +15,8 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Using")]
+
     public class CongViecController : ControllerBase
     {
 
@@ -79,18 +83,7 @@ namespace CDExcellent.Controllers
             return Ok(cv);
         }
 
-        [HttpGet("XemNhanXet/{id}")]
-        public async Task<IActionResult> CongViecCuaToi(int id)
-        {
-            
-            var dsNhanXet =  await _iCongViecRepository.GetAllNhanXet(id);
-            if(dsNhanXet == null)
-            {
-                return NotFound("Công việc chưa nhận được nhận xét nào!");
-            }
-            return Ok(dsNhanXet);
-        }
-
+    
         // POST: api/CongViec
         [HttpPost("ThemMoiCongViec")]
         public async Task<IActionResult> TaoCongViec([FromForm] CongViecDTO cv)
@@ -108,7 +101,7 @@ namespace CDExcellent.Controllers
                 return BadRequest(new {Error = ex.Message});
             }
         }
-
+        [Authorize(Policy = "Manager")]
         // PUT: api/CongViec/5
         [HttpPut("CapNhatCongViec/{id}")]
         public async Task<IActionResult> CapNhat(int id, [FromForm] CongViecDTO cvMoi)
@@ -127,7 +120,7 @@ namespace CDExcellent.Controllers
                 return BadRequest( new {Mess = "Error: " + ex.Message});
             }
         }
-
+        [Authorize(Policy = "Manager")]
         // DELETE: api/CongViec/5
         [HttpDelete("XoaCongViec/{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -146,31 +139,73 @@ namespace CDExcellent.Controllers
                 return BadRequest( new {Mess = "Error: " + ex.Message});
             }
         }
-    
+
         [HttpPost("VietNhanXetCongViec")]
         public async Task<IActionResult> VietNhanXet([FromForm] FeedbackDTO fb)
         {
             try
             {
-                string IdUser = User.FindFirstValue("id");
-                if(IdUser == null)
+                string email = User.FindFirstValue(JwtRegisteredClaimNames.Email);
+                if(email == null)
                 {
                     return NotFound("Vui lòng đăng nhập và xác thực để sử dụng tính năng này!");
                 }
-                var kt = _context.CongViecs.Where(c=> c.IdCV == fb.IdCongViec && c.IdNguoiNhan == IdUser);
-                if(kt == null)
-                {
-                    return NotFound("Không hợp lệ! Công việc không tồn tại hoặc bạn không được giao phó công việc này!");
-
-                }
-                return Ok(await _iCongViecRepository.NhanXetCongViec(IdUser, fb));
+                return Ok(await _iCongViecRepository.NhanXetCongViec(email, fb));
             }
             catch (Exception ex)
             {
                 return BadRequest(new {Error = ex.Message});
             }
         }
+        [HttpGet("XemNhanXet/{id}")]
+        public async Task<IActionResult> CongViecCuaToi(int id)
+        {
+            
+            var dsNhanXet =  await _iCongViecRepository.GetAllNhanXet(id);
+            if(dsNhanXet == null)
+            {
+                return NotFound("Công việc chưa nhận được nhận xét nào!");
+            }
+            return Ok(dsNhanXet);
+        }
+        [Authorize(Policy = "Manager")]
+        [HttpPost]
+        [Route("BaoCaoCongViec")]
+        public async Task<IActionResult> UploadImage(int IdCV, IFormFile file)
+        {
+            var form = await Request.ReadFormAsync();
+            var congViec = await _iCongViecRepository.GetByIdCongViec(IdCV);
+            if (file == null || file.Length == 0)
+                return BadRequest("Invalid file");
 
-    
+            var fileExtension = Path.GetExtension(file.FileName); // lấy phần mở rộng của file
+            var filePath = Path.Combine("images", IdCV.ToString() + fileExtension); // tạo đường dẫn đầy đủ
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            congViec.HoanThanh =true;
+            _context.CongViecs.UpdateRange(congViec);
+            await _context.SaveChangesAsync();
+
+            return Ok("Hoàn thành công việc!");
+        }
+
+        [HttpGet]
+        [Route("KiemTraBaoCao")]
+        public IActionResult KiemTraBaoCao(int IdCV)
+        {
+            var filePath = Path.Combine("images", IdCV.ToString());
+
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+            return new FileStreamResult(fileStream, "image/jpeg");
+        }
+
     }
 }

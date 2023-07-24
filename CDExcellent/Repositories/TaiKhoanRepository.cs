@@ -213,13 +213,13 @@ namespace CDExcellent.Repositories
             return accessToken;
         }
 
-        public async Task<dynamic> ForgotPassword(string email)
+        public async Task<string> ForgotPassword(string email)
         {
             var user = await _context.Users.Where(u => u.Email == email).SingleOrDefaultAsync();
 
             if (user == null)
             {
-                return new { Message = "Email không chính xác!" };
+                return "Email không chính xác!";
 
             }
             string token = GenerateConfirmMailToken(user);

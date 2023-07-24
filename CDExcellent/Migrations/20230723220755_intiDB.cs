@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CDExcellent.Migrations
 {
-    public partial class initDB : Migration
+    public partial class intiDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -152,19 +152,51 @@ namespace CDExcellent.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "KhaoSat",
+                columns: table => new
+                {
+                    IdKhaoSat = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NgayKS = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GioKS = table.Column<TimeSpan>(type: "time", nullable: false),
+                    A = table.Column<bool>(type: "bit", nullable: false),
+                    B = table.Column<bool>(type: "bit", nullable: false),
+                    C = table.Column<bool>(type: "bit", nullable: false),
+                    D = table.Column<bool>(type: "bit", nullable: false),
+                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IdTieuChi = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KhaoSat", x => x.IdKhaoSat);
+                    table.ForeignKey(
+                        name: "FK_KhaoSat_TieuChiKS_IdTieuChi",
+                        column: x => x.IdTieuChi,
+                        principalTable: "TieuChiKS",
+                        principalColumn: "IdTieuChi",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KhaoSat_User_IdUser",
+                        column: x => x.IdUser,
+                        principalTable: "User",
+                        principalColumn: "IdUser",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LichTrinh",
                 columns: table => new
                 {
                     IdLichTrinh = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TuaDe = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BatDau = table.Column<DateTime>(type: "datetime2", nullable: false),
                     KetThuc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MucDich = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     KhachMoi = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdNPP = table.Column<int>(type: "int", nullable: false),
-                    IdNguoiTao = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IdNguoiNhan = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    IdNguoiTao = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,15 +208,11 @@ namespace CDExcellent.Migrations
                         principalColumn: "IdNPP",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LichTrinh_User_IdNguoiNhan",
-                        column: x => x.IdNguoiNhan,
-                        principalTable: "User",
-                        principalColumn: "IdUser");
-                    table.ForeignKey(
                         name: "FK_LichTrinh_User_IdNguoiTao",
                         column: x => x.IdNguoiTao,
                         principalTable: "User",
-                        principalColumn: "IdUser");
+                        principalColumn: "IdUser",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,31 +327,24 @@ namespace CDExcellent.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "KhaoSat",
+                name: "Feedback",
                 columns: table => new
                 {
-                    IdKhaoSat = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NgayKS = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    GioKS = table.Column<TimeSpan>(type: "time", nullable: false),
-                    IdLichTrinh = table.Column<int>(type: "int", nullable: false),
-                    IdTieuChi = table.Column<int>(type: "int", nullable: false),
-                    MucDo = table.Column<double>(type: "float", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdCongViec = table.Column<int>(type: "int", nullable: false),
+                    NoiDung = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NgayGui = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KhaoSat", x => x.IdKhaoSat);
+                    table.PrimaryKey("PK_Feedback", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_KhaoSat_LichTrinh_IdLichTrinh",
-                        column: x => x.IdLichTrinh,
-                        principalTable: "LichTrinh",
-                        principalColumn: "IdLichTrinh",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_KhaoSat_TieuChiKS_IdTieuChi",
-                        column: x => x.IdTieuChi,
-                        principalTable: "TieuChiKS",
-                        principalColumn: "IdTieuChi",
+                        name: "FK_Feedback_CongViec_IdCongViec",
+                        column: x => x.IdCongViec,
+                        principalTable: "CongViec",
+                        principalColumn: "IdCV",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -343,14 +364,19 @@ namespace CDExcellent.Migrations
                 column: "IdNguoiTao");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KhaoSat_IdLichTrinh",
-                table: "KhaoSat",
-                column: "IdLichTrinh");
+                name: "IX_Feedback_IdCongViec",
+                table: "Feedback",
+                column: "IdCongViec");
 
             migrationBuilder.CreateIndex(
                 name: "IX_KhaoSat_IdTieuChi",
                 table: "KhaoSat",
                 column: "IdTieuChi");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KhaoSat_IdUser",
+                table: "KhaoSat",
+                column: "IdUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_KhuVuc_NPP_IdKhuVuc",
@@ -361,11 +387,6 @@ namespace CDExcellent.Migrations
                 name: "IX_KhuVuc_NPP_IdNPP",
                 table: "KhuVuc_NPP",
                 column: "IdNPP");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LichTrinh_IdNguoiNhan",
-                table: "LichTrinh",
-                column: "IdNguoiNhan");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LichTrinh_IdNguoiTao",
@@ -420,7 +441,7 @@ namespace CDExcellent.Migrations
                 name: "BaiViet");
 
             migrationBuilder.DropTable(
-                name: "CongViec");
+                name: "Feedback");
 
             migrationBuilder.DropTable(
                 name: "KhaoSat");
@@ -441,10 +462,13 @@ namespace CDExcellent.Migrations
                 name: "Tokens");
 
             migrationBuilder.DropTable(
-                name: "LichTrinh");
+                name: "CongViec");
 
             migrationBuilder.DropTable(
                 name: "TieuChiKS");
+
+            migrationBuilder.DropTable(
+                name: "LichTrinh");
 
             migrationBuilder.DropTable(
                 name: "NhaPhanPhoi");

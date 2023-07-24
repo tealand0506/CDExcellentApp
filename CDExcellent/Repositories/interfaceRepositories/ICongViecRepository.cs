@@ -7,7 +7,7 @@ namespace CDExcellent.Repositories.interfaceRepositories
     {
         Task<List<CongViec>> GetAllCongViec();
         Task<CongViec?> GetByIdCongViec(int id);
-        Task<object> NhanXetCongViec(string IdUser, FeedbackDTO nx);
+        Task<object> NhanXetCongViec(string emailUser, FeedbackDTO nx);
         Task<List<Feedback>> GetAllNhanXet(int IdCongViec);
         
         Task<List<CongViec?>> CongViecByUser(string IdUser);

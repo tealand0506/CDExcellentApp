@@ -1,6 +1,7 @@
 ﻿using CDExcellent.DTO;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,6 +10,7 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Manager")]
     public class ChucVuController : ControllerBase
     {
         private readonly IChucVuRepository _chucVuRepository;

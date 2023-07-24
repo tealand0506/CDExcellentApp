@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CDExcellent.Migrations
 {
     [DbContext(typeof(CDE_Dbcontext))]
-    [Migration("20230721200848_initDB")]
-    partial class initDB
+    [Migration("20230723220755_intiDB")]
+    partial class intiDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,6 +120,35 @@ namespace CDExcellent.Migrations
                     b.ToTable("CongViec");
                 });
 
+            modelBuilder.Entity("CDExcellent.Models.Feedback", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdCongViec")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NgayGui")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("IdCongViec");
+
+                    b.ToTable("Feedback");
+                });
+
             modelBuilder.Entity("CDExcellent.Models.KhaoSat", b =>
                 {
                     b.Property<int>("IdKhaoSat")
@@ -128,26 +157,36 @@ namespace CDExcellent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdKhaoSat"), 1L, 1);
 
+                    b.Property<bool>("A")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("B")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("C")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("D")
+                        .HasColumnType("bit");
+
                     b.Property<TimeSpan>("GioKS")
                         .HasColumnType("time");
-
-                    b.Property<int>("IdLichTrinh")
-                        .HasColumnType("int");
 
                     b.Property<int>("IdTieuChi")
                         .HasColumnType("int");
 
-                    b.Property<double>("MucDo")
-                        .HasColumnType("float");
+                    b.Property<string>("IdUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("NgayKS")
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdKhaoSat");
 
-                    b.HasIndex("IdLichTrinh");
-
                     b.HasIndex("IdTieuChi");
+
+                    b.HasIndex("IdUser");
 
                     b.ToTable("KhaoSat");
                 });
@@ -206,10 +245,8 @@ namespace CDExcellent.Migrations
                     b.Property<int>("IdNPP")
                         .HasColumnType("int");
 
-                    b.Property<string>("IdNguoiNhan")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("IdNguoiTao")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("KetThuc")
@@ -223,6 +260,9 @@ namespace CDExcellent.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("TuaDe")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -230,8 +270,6 @@ namespace CDExcellent.Migrations
                     b.HasKey("IdLichTrinh");
 
                     b.HasIndex("IdNPP");
-
-                    b.HasIndex("IdNguoiNhan");
 
                     b.HasIndex("IdNguoiTao");
 
@@ -475,23 +513,34 @@ namespace CDExcellent.Migrations
                     b.Navigation("NguoiTaos");
                 });
 
-            modelBuilder.Entity("CDExcellent.Models.KhaoSat", b =>
+            modelBuilder.Entity("CDExcellent.Models.Feedback", b =>
                 {
-                    b.HasOne("CDExcellent.Models.LichTrinh", "LichTrinnhs")
+                    b.HasOne("CDExcellent.Models.CongViec", "CongViecs")
                         .WithMany()
-                        .HasForeignKey("IdLichTrinh")
+                        .HasForeignKey("IdCongViec")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("CongViecs");
+                });
+
+            modelBuilder.Entity("CDExcellent.Models.KhaoSat", b =>
+                {
                     b.HasOne("CDExcellent.Models.TieuChiKS", "TieuChiKSs")
                         .WithMany()
                         .HasForeignKey("IdTieuChi")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LichTrinnhs");
+                    b.HasOne("CDExcellent.Models.User", "Users")
+                        .WithMany()
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TieuChiKSs");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("CDExcellent.Models.KhuVuc_NPP", b =>
@@ -521,15 +570,11 @@ namespace CDExcellent.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CDExcellent.Models.User", "NguoiNhan")
-                        .WithMany()
-                        .HasForeignKey("IdNguoiNhan");
-
                     b.HasOne("CDExcellent.Models.User", "Users")
                         .WithMany()
-                        .HasForeignKey("IdNguoiTao");
-
-                    b.Navigation("NguoiNhan");
+                        .HasForeignKey("IdNguoiTao")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("NhaPhanPhois");
 

@@ -12,15 +12,19 @@ namespace CDExcellent.Models
         public DateTime NgayKS{get;set;}
         public TimeSpan GioKS {get;set;}
         
-        public int IdLichTrinh {get;set;}
-        [ForeignKey("IdLichTrinh")]
-        public LichTrinh LichTrinnhs {get;set;}
+        public bool A {get;set;}
+        public bool B {get;set;}
+        public bool C {get;set;}
+        public bool D {get;set;}
+
+
+        public string IdUser {get;set;}
+        [ForeignKey("IdUser")]
+        public User Users {get;set;}
 
         public int IdTieuChi {get;set;}
         [ForeignKey("IdTieuChi")]
         public TieuChiKS TieuChiKSs { get; set; }
 
-        //public string
-        public double MucDo {get;set;}
     }
 }

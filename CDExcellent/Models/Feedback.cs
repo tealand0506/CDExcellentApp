@@ -3,15 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CDExcellent.Models
 {
-    [Table("ChucVu")]
+    [Table("Feedback")]
 
     public class Feedback
     {
         [Key]
         public int ID {get;set;}
-        public string IdNguoiGui {get;set;}
-        [ForeignKey("IdNguoiGui")]
-        public User NguoiGuis{get;set;}
+        public string Email {get;set;}
 
         public int IdCongViec{get;set;}
         [ForeignKey("IdCongViec")]

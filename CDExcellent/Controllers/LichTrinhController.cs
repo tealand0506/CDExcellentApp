@@ -2,6 +2,7 @@
 using CDExcellent.DTO;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // Visiting List- Create/Edit/Delete
@@ -13,6 +14,8 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Using")]
+
     public class LichTrinhController : ControllerBase
     {
         private readonly CDE_Dbcontext _context;
@@ -45,7 +48,7 @@ namespace CDExcellent.Controllers
             }
             return Ok(lichTrinh);
         }
-
+        [Authorize(Policy = "Manager")]
         // POST api/<LichTrinhController>
         [HttpPost("ThemLichTrinh")]
         public async Task<IActionResult> ThemLichTrinh([FromForm] LichTrinhDTO lt)
@@ -62,7 +65,7 @@ namespace CDExcellent.Controllers
                 return BadRequest(new {Error = ex.Message});
             }
         }
-
+        [Authorize(Policy = "Manager")]
         [HttpPut("CapNhatLichTrinh/{id}")]
         public async Task<IActionResult> CapNhat(int id, [FromForm] LichTrinhDTO ltMoi)
         {
@@ -81,7 +84,7 @@ namespace CDExcellent.Controllers
                 return BadRequest( new {Mess = "Error: " + ex.Message});
             }
         }
-
+        [Authorize(Policy = "Manager")]
         // DELETE api/<LichTrinhController>/5
         [HttpDelete("XoaLichTrinh/{id}")]
         public async Task<IActionResult> Delete(int id)

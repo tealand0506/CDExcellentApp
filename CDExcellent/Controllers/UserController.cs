@@ -2,6 +2,7 @@
 using CDExcellent.DTO;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 //  Staff List (BAM,
@@ -13,6 +14,8 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Using")]
+
     public class UserController : ControllerBase
     {
         private readonly CDE_Dbcontext _context;
@@ -24,7 +27,7 @@ namespace CDExcellent.Controllers
             _iUserRepository= iUserRepository;
             _iTaiKhoanRepository = iTaiKhoanRepository;
         }
-        
+        [Authorize(Policy = "Manager")]
         // GET: api/<UserController>
         [HttpGet("DanhSachNguoiDung")]
         public async Task<IActionResult> DanhSachNguoiDung()
@@ -32,7 +35,7 @@ namespace CDExcellent.Controllers
             var dsNguoiDung = await _iUserRepository.GetAllUser();
             return Ok(dsNguoiDung);
         }
-
+        [Authorize(Policy = "Manager")]
         // GET api/<UserController>/5
         [HttpGet("TimNguoiDung/{id}")]
         public async Task<IActionResult> Get(string id)
@@ -51,6 +54,21 @@ namespace CDExcellent.Controllers
             return Ok(await _iUserRepository.GetByIdUser(IdUser));            
         }
         
+        // PUT api/<UserController>/5
+        [HttpPut("CapNhatThongTinCuaToi/{id}")]
+        public async Task<IActionResult> CapNhatThongTinCuaToi( [FromForm] UserDTO newUser)
+        {
+            string id = User.FindFirstValue("id");
+            var oldUser = await _iUserRepository.GetByIdUser(id);
+            if(oldUser == null)
+            {
+                return Ok($"Không tìm thấy người dùng có ID={id}");
+            }
+            await _iUserRepository.PutUser(oldUser,newUser);
+            return Ok("Cập nhật thông tin người dùng thành công!");
+        }
+        
+        [Authorize(Policy = "Manager")]        
         // POST api/<UserController>
         [HttpPost("ThemNguoiDung")]
         public async Task<IActionResult> ThemNguoDung([FromForm] UserDTO user)
@@ -63,7 +81,9 @@ namespace CDExcellent.Controllers
             }
             return Ok($"Thông tin của người dùng '{nd.HoTen}' đã được thêm thành công! \nKích Hoạt với tên đăng nhập là '{user.Email}' và mật khấu '{user.SDT}' \n\nLưu ý: vui lòng đặt lại thông tin tài khoản sau khi kích hoạt để đảm bảo an toàn thông tin!");
         }
-
+        
+        
+        [Authorize(Policy = "Manager")]
         // PUT api/<UserController>/5
         [HttpPut("CapNhatNguoiDung/{id}")]
         public async Task<IActionResult> CapNhatNguoiDung(string id, [FromForm] UserDTO newUser)
@@ -76,7 +96,9 @@ namespace CDExcellent.Controllers
             await _iUserRepository.PutUser(oldUser,newUser);
             return Ok("Cập nhật thông tin người dùng thành công!");
         }
-
+        
+        
+        [Authorize(Policy = "Manager")]
         // DELETE api/<UserController>/5
         [HttpDelete("XoaNguoiDung/{id}")]
         public async Task<IActionResult> XoaNguoiDung(string id)

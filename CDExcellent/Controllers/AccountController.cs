@@ -3,6 +3,7 @@ using CDExcellent.DTO;
 using CDExcellent.Middlewares;
 using CDExcellent.Models;
 using CDExcellent.Repositories.interfaceRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ namespace CDExcellent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Using")]
     public class AccountController : ControllerBase
     {
         private readonly CDE_Dbcontext _context;
@@ -20,8 +22,10 @@ namespace CDExcellent.Controllers
             _iTaiKhoanRepository = iTaiKhoanRepository;
             _context = context;
         }
+
         // GET: api/<TaiKhoanController>
         [HttpGet("DanhSachTaiKhoan")]
+        [Authorize(Policy = "Manager")]
         public async Task<IActionResult> GetAllTaiKhoan()
         {
             var dsTaiKhoan = await _iTaiKhoanRepository.GetAllTaiKhoan();
@@ -87,13 +91,13 @@ namespace CDExcellent.Controllers
         }
 
         [HttpGet("QuenMatKhau")]
-        public async Task<IActionResult> ForgotPassword(string emailUser)
+        public async Task<IActionResult> ForgotPassword([FromQuery] string emailUser)
         {
             try
             {
-                var result = await _iTaiKhoanRepository.ForgotPassword(emailUser);
+                string token = await _iTaiKhoanRepository.ForgotPassword(emailUser);
 
-                return Ok(result);
+                return Ok(token);
             }
             catch (Exception ex)
             {

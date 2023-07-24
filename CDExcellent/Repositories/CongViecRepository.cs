@@ -21,12 +21,12 @@ namespace CDExcellent.Repositories
             return await GetByIdAsync(id);
         }
 
-        public async Task<object> NhanXetCongViec(string IdUser, FeedbackDTO nx)
+        public async Task<object> NhanXetCongViec(string emailUser, FeedbackDTO nx)
         {
             var themNhanXet = new Feedback
             {
                 IdCongViec = nx.IdCongViec,
-                IdNguoiGui = IdUser,
+                Email = emailUser,
                 NgayGui = DateTime.Now,    
                 NoiDung = nx.NoiDung,            
             };

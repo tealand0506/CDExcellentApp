@@ -74,17 +74,24 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(option => {
     option.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    option.AddPolicy("Manager", policy => policy.RequireRole("Admin","Managser", "VPCD"));
+    option.AddPolicy("BM", policy => policy.RequireRole("Admin","Managser", "VPCD"));
+    option.AddPolicy("BAM", policy => policy.RequireRole("Admin","Managser", "VPCD", "BAM"));
+    option.AddPolicy("CE", policy => policy.RequireRole("Admin","Managser", "VPCD", "CE"));
+    option.AddPolicy("ASM", policy => policy.RequireRole("Admin","Managser", "VPCD", "ASM"));
+    option.AddPolicy("Using", policy => policy.RequireRole("Admin", "Managser", "VPCD", "BAM", "CE","ASM"));
 });
 
 
 builder.Services.AddScoped<IChucVuRepository, ChucVuRepository>()
-    .AddScoped<IKhuVucRepository, KhuVucRepository>()
-    .AddScoped<INPPRepository, NPPRepository>()
-    .AddScoped<IUserRepository, UserRepository>()
-    .AddScoped<IKhaoSatRepository, KhaoSatRepository>()
     .AddScoped<ICongViecRepository, CongViecRepository>()
+    .AddScoped<IKhaoSatRepository, KhaoSatRepository>()
+    .AddScoped<IKhuVucRepository, KhuVucRepository>()
     .AddScoped<ILichTrinhRepository, LichTrinhRepository>()
-    .AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+    .AddScoped<INPPRepository, NPPRepository>()
+    .AddScoped<ITaiKhoanRepository, TaiKhoanRepository>()
+    .AddScoped<IThongBaoRepository, ThongBaoRepository>()
+    .AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
@@ -94,7 +101,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(); 
 }
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
     
 
